@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Market Pulse" />
+  <link rel="manifest" href="manifest.json" />
+  <title>Market Pulse</title>
+  <style>
+    :root { --bg:#0b1220; --card:#141e30; --line:#26354d; --muted:#9ba9bf; --text:#f7f9fc; --green:#37d99a; --red:#ff7676; --gold:#ffc857; }
+    * { box-sizing:border-box; } body { margin:0; background:linear-gradient(160deg,#101b30 0%,#0a101c 50%,#0b1220 100%); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Segoe UI,sans-serif; min-height:100vh; }
+    main { max-width:520px; margin:auto; padding:calc(env(safe-area-inset-top) + 18px) 18px calc(env(safe-area-inset-bottom) + 94px); }
+    header { display:flex; justify-content:space-between; align-items:flex-start; } h1 { margin:0; letter-spacing:-1px; font-size:30px; } .sub { color:var(--muted); margin:7px 0 0; font-size:14px; } button { border:0; font:inherit; cursor:pointer; } .refresh { background:#21304a; color:#dce8f8; width:42px; height:42px; border-radius:14px; font-size:19px; }
+    .hero { margin-top:25px; padding:20px; border-radius:22px; background:linear-gradient(130deg,#174c43,#142f3a); border:1px solid #287664; } .eyebrow { color:#87ecd0; text-transform:uppercase; font-weight:700; font-size:11px; letter-spacing:1.2px; } .hero h2 { margin:8px 0 4px; font-size:24px; letter-spacing:-.6px; } .hero p { color:#d1e5e1; margin:0; line-height:1.45; font-size:14px; }.tag { display:inline-block; background:rgba(55,217,154,.16); color:#83f1c6; padding:6px 10px; margin-top:16px; border-radius:20px; font-size:12px; font-weight:700; }
+    .section-head { display:flex; align-items:end; justify-content:space-between; margin:28px 2px 12px; } h3 { font-size:18px; margin:0; letter-spacing:-.3px; } .section-head span { color:var(--muted); font-size:12px; }
+    .stock { display:flex; align-items:center; gap:13px; padding:14px 2px; border-bottom:1px solid var(--line); }.badge { width:42px; height:42px; display:grid; place-items:center; border-radius:13px; font-size:12px; font-weight:800; background:#1d2c44; color:#cbdcff; }.badge.energy { background:#3d3321;color:#ffd780; }.stock-info { min-width:0; flex:1; }.ticker { font-size:16px; font-weight:750; }.company { color:var(--muted); font-size:12px; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }.change { text-align:right; font-weight:750; color:var(--green); }.price { color:var(--muted); font-size:12px; margin-top:3px; }
+    .note { background:#121b2b; border:1px solid #27364d; border-radius:17px; padding:16px; color:#c4d0e2; font-size:13px; line-height:1.45; }.note strong { color:white; }.disclaimer { color:#78869d; font-size:11px; line-height:1.5; margin:22px 2px 0; }.setup { width:100%; background:#23395d; color:#dbe9ff; border:1px solid #365683; margin-top:14px; padding:11px; border-radius:12px; font-size:13px; font-weight:700; }.hidden{display:none}.modal { position:fixed; inset:0; z-index:3; background:rgba(3,8,15,.72); display:grid; place-items:end center; padding:18px; }.sheet { width:min(520px,100%); padding:22px; border:1px solid #33445e; border-radius:23px; background:#162238; box-shadow:0 20px 70px #000; }.sheet h2 { margin:0 0 8px; }.sheet p { color:#b8c5d8; font-size:14px; line-height:1.45; }.sheet input { width:100%; background:#0b1423; border:1px solid #40516a; color:white; padding:14px; border-radius:12px; font-size:16px; margin:8px 0 12px; }.save { width:100%; background:#37d99a; color:#082318; padding:13px; border-radius:12px; font-weight:800; }.skip { display:block; width:100%; color:#abc1df; background:transparent; padding:13px; margin-top:6px; }
+    nav { position:fixed; bottom:0; left:0; right:0; background:rgba(12,19,32,.93); backdrop-filter:blur(14px); border-top:1px solid #26354d; display:flex; justify-content:center; padding:11px max(22px, env(safe-area-inset-right)) calc(11px + env(safe-area-inset-bottom)) max(22px, env(safe-area-inset-left)); } .nav-inner { width:min(484px,100%); display:flex; justify-content:space-around; color:#8190a8; font-size:11px; }.nav-item { text-align:center; }.nav-icon { font-size:20px; display:block; margin-bottom:3px; }.active { color:#74edbf; }
+  </style>
+</head>
+<body>
+  <main>
+    <header><div><h1>Market Pulse</h1><p class="sub" id="updated">Daily market snapshot</p></div><button class="refresh" id="refresh" aria-label="Refresh">↻</button></header>
+    <section class="hero"><div class="eyebrow">Today’s market signal</div><h2>Energy is leading</h2><p>Oil-linked shares are outperforming while the broader market is under pressure. Keep an eye on crude prices before acting.</p><span class="tag">● High momentum</span></section>
+    <div class="section-head"><h3>Leading names</h3><span id="quote-status">Large, liquid stocks</span></div>
+    <section id="stocks"></section>
+    <div class="section-head"><h3>Why it’s moving</h3><span>Quick context</span></div>
+    <div class="note"><strong>Oil-led rally:</strong> Energy shares are gaining as crude rises. This is a news-driven trade, so momentum can change quickly when supply-risk headlines shift.</div>
+    <button class="setup" id="setup">Connect live prices</button>
+    <p class="disclaimer">For awareness and research—not personalized investment advice. A live-data connection is required for current prices.</p>
+  </main>
+  <div class="modal hidden" id="modal"><div class="sheet"><h2>Connect live prices</h2><p>Get a free API key from <a href="https://finnhub.io/register" target="_blank" rel="noreferrer">Finnhub</a>, then paste it here. It stays only on this device.</p><input id="api-key" type="password" autocapitalize="off" autocomplete="off" placeholder="Your Finnhub API key" /><button class="save" id="save">Save and refresh</button><button class="skip" id="close">Not now</button></div></div>
+  <nav><div class="nav-inner"><div class="nav-item active"><span class="nav-icon">⌁</span>Pulse</div><div class="nav-item"><span class="nav-icon">☆</span>Watchlist</div><div class="nav-item"><span class="nav-icon">◷</span>Updates</div></div></nav>
+  <script>
+    const stocks=[['APA','APA Corporation','energy','+3.0%','44.84'],['XOM','Exxon Mobil','energy','+2.2%','—'],['CVX','Chevron','energy','+1.9%','—'],['COP','ConocoPhillips','energy','+1.8%','—'],['EOG','EOG Resources','energy','+1.7%','—'],['META','Meta Platforms','tech','+6.6%','—']];
+    const list=document.getElementById('stocks');
+    const status=document.getElementById('quote-status'), modal=document.getElementById('modal'), input=document.getElementById('api-key');
+    function draw(){ list.innerHTML=stocks.map(([t,n,c,p,price])=>`<article class="stock"><div class="badge ${c}">${t}</div><div class="stock-info"><div class="ticker">${t}</div><div class="company">${n}</div></div><div class="change">${p}<div class="price">$${price}</div></div></article>`).join(''); document.getElementById('updated').textContent='Updated '+new Date().toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})+' · '+(localStorage.marketKey?'Live quotes':'Sample data'); }
+    async function refresh(){ const key=localStorage.marketKey; if(!key){status.textContent='Connect for live prices';draw();return} status.textContent='Updating…'; try { await Promise.all(stocks.map(async s=>{const r=await fetch('https://finnhub.io/api/v1/quote?symbol='+s[0]+'&token='+encodeURIComponent(key));if(!r.ok)throw Error();const q=await r.json();if(!q.c)throw Error();s[3]=(q.dp>=0?'+':'')+q.dp.toFixed(2)+'%';s[4]=q.c.toFixed(2)})); status.textContent='Live quotes'; draw(); } catch { status.textContent='Could not update'; } }
+    draw(); document.getElementById('setup').onclick=()=>{input.value=localStorage.marketKey||'';modal.classList.remove('hidden')}; document.getElementById('close').onclick=()=>modal.classList.add('hidden'); document.getElementById('save').onclick=()=>{const key=input.value.trim();if(!key)return;localStorage.marketKey=key;modal.classList.add('hidden');refresh()}; document.getElementById('refresh').addEventListener('click',e=>{e.currentTarget.style.transform='rotate(360deg)';e.currentTarget.style.transition='.45s';refresh();setTimeout(()=>e.currentTarget.style.transform='',450)}); refresh();
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+  </script>
+</body>
+</html>
